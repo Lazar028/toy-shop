@@ -183,13 +183,11 @@ export class ToyListComponent implements OnInit {
       if (p['search']) this.filtersOpen = true;
     });
 
-    // Učitaj sve podatke paralelno, ali sačekaj da se svi završe
     forkJoin({
       toys: this.toyService.getAllToys(),
       ageGroups: this.toyService.getAgeGroups(),
       toyTypes: this.toyService.getToyTypes()
     }).subscribe({
-      // U ToyListComponent, nakon što učitaš podatke:
       next: (result) => {
         this.all = result.toys;
         this.ageGroups = result.ageGroups;
@@ -198,10 +196,8 @@ export class ToyListComponent implements OnInit {
         this.loading = false;
         this.sort();
 
-        // Forsiraj kompletnu detekciju promena
         this.cdr.detectChanges();
 
-        // Dodatno: proveri prvu igračku
         console.log('Prva igračka:', result.toys[0]);
         console.log('Tip prve igračke:', result.toys[0].type);
       },
